@@ -19,7 +19,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
-final class FMUtil {
+public final class FMUtil {
 
 	public final static int SEG_NONE = 0;
 	public final static int SEG_WHOLE_TAG = 1;
