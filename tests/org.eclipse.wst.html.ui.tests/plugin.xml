@@ -11,5 +11,7 @@
 			id="org.eclipse.wst.html.ui.tests.viewer.ViewerTestHTML">
 		</view>
 	</extension>
-
+	<extension point="org.eclipse.wst.html.core.customTagValidator">
+		<validator class="org.eclipse.wst.html.ui.tests.validation.CustomExtendedValidator"></validator>
+	</extension>
 </plugin>

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Red Hat, Inc. - external validator extension
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.validate;
 
@@ -32,11 +33,13 @@ import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeEntry;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeRegistry;
 import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.html.core.internal.provisional.HTML50Namespace;
+import org.eclipse.wst.html.core.validate.extension.IHTMLCustomTagValidator;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.validate.ErrorInfo;
+import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.document.InvalidCharacterException;
 import org.eclipse.wst.xml.core.internal.document.SourceValidator;
@@ -324,8 +327,25 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 			}
 			else {
 				if (shouldValidateElementName(info.target)) {
-					Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_START_TAG_NAME);
-					report(UNDEFINED_NAME_ERROR, errorSeg, info.target);
+					// not excluded in preferences - check for extension point
+					boolean validated = false;
+					
+					for (IHTMLCustomTagValidator v : CustomHTMLTagValidatorExtensionLoader.getInstance().getValidators()) {
+						if (v.canValidate(info.target)) {
+							validated = true;
+							ValidationMessage result = v.validateTag(info.target);
+							if(result != null) {
+								// report only one validation result or nothing if all reports are null
+								reporter.report(result);
+								break;
+							}
+						}
+					}
+					
+					if (!validated) {
+						Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_START_TAG_NAME);
+						report(UNDEFINED_NAME_ERROR, errorSeg, info.target);
+					}
 				}
 			}
 		}
