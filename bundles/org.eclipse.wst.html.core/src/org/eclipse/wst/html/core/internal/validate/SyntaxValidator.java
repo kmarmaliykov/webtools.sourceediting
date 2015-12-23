@@ -373,7 +373,7 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 		for (IConfigurationElement e : CustomHTMLTagValidatorExtensionLoader.getInstance().getValidators()) {
 			IHTMLCustomTagValidator validator;
 			try {
-				validator = (IHTMLCustomTagValidator) e.createExecutableExtension("class");
+				validator = (IHTMLCustomTagValidator) e.createExecutableExtension("tag-class");
 				validator.init();
 				externalValidators.add(validator);			
 			} catch (CoreException e1) {

@@ -39,7 +39,7 @@ import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.Logger;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeConstants;
 import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
-import org.eclipse.wst.html.core.validate.extension.IHTMLCustomTagValidator;
+import org.eclipse.wst.html.core.validate.extension.IHTMLCustomAttributeValidator;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -88,7 +88,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 	private static final String ATTR_NAME_WAI_ARIA = "aria-"; //$NON-NLS-1$
 	private static final int ATTR_NAME_WAI_ARIA_LENGTH = ATTR_NAME_WAI_ARIA.length();
 
-	private List<IHTMLCustomTagValidator> externalValidators;
+	private List<IHTMLCustomAttributeValidator> externalValidators;
 
 	/**
 	 * HTMLAttributeValidator constructor comment.
@@ -158,7 +158,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 					}
 					
 					boolean validated = false;
-					for (IHTMLCustomTagValidator v : externalValidators) {
+					for (IHTMLCustomAttributeValidator v : externalValidators) {
 						if (v.canValidate((IDOMElement) target)) {
 							validated = true;
 							ValidationMessage result = v.validateAttribute((IDOMElement) target, attrName);
@@ -385,11 +385,11 @@ public class HTMLAttributeValidator extends PrimeValidator {
 	}
 
 	private void initValidators() {
-		externalValidators = new ArrayList<IHTMLCustomTagValidator>();
+		externalValidators = new ArrayList<IHTMLCustomAttributeValidator>();
 		for (IConfigurationElement e : CustomHTMLTagValidatorExtensionLoader.getInstance().getValidators()) {
-			IHTMLCustomTagValidator validator;
+			IHTMLCustomAttributeValidator validator;
 			try {
-				validator = (IHTMLCustomTagValidator) e.createExecutableExtension("class");
+				validator = (IHTMLCustomAttributeValidator) e.createExecutableExtension("attr-class");
 				validator.init();
 				externalValidators.add(validator);			
 			} catch (CoreException e1) {

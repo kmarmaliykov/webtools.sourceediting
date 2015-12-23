@@ -11,20 +11,16 @@
 package org.eclipse.wst.html.core.validate.extension;
 
 import org.eclipse.wst.html.core.internal.validate.FMUtil;
-import org.eclipse.wst.html.core.internal.validate.HTMLAttributeValidator;
 import org.eclipse.wst.html.core.internal.validate.Segment;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 public abstract class HTMLCustomTagValidator implements IHTMLCustomTagValidator{
-	public final static int TAG_SEG_NONE = FMUtil.SEG_NONE;
-	public final static int TAG_SEG_WHOLE_TAG = FMUtil.SEG_WHOLE_TAG;
-	public final static int TAG_SEG_START_TAG = FMUtil.SEG_START_TAG;
-	public final static int TAG_SEG_END_TAG = FMUtil.SEG_END_TAG;
-	public final static int TAG_SEG_START_TAG_NAME = FMUtil.SEG_START_TAG_NAME;
-	public final static int TAG_SEG_END_TAG_NAME = FMUtil.SEG_END_TAG_NAME;
-	
-	public static final int ATTR_REGION_NAME = HTMLAttributeValidator.REGION_NAME;
-	public static final int ATTR_REGION_VALUE = HTMLAttributeValidator.REGION_VALUE;
+	public final static int SEG_NONE = FMUtil.SEG_NONE;
+	public final static int SEG_WHOLE_TAG = FMUtil.SEG_WHOLE_TAG;
+	public final static int SEG_START_TAG = FMUtil.SEG_START_TAG;
+	public final static int SEG_END_TAG = FMUtil.SEG_END_TAG;
+	public final static int SEG_START_TAG_NAME = FMUtil.SEG_START_TAG_NAME;
+	public final static int SEG_END_TAG_NAME = FMUtil.SEG_END_TAG_NAME;
 	
 	/**Error segment for tag validation
 	 * 
@@ -34,15 +30,5 @@ public abstract class HTMLCustomTagValidator implements IHTMLCustomTagValidator{
 	 */
 	public final static Segment getTagSegment(IDOMNode target, int segType) {
 		return FMUtil.getSegment(target, segType);
-	}
-	
-	/**Error segment for attribute validation
-	 * 
-	 * @param errorNode attribute with error
-	 * @param regionType type of region where error marker should be placed
-	 * @return {@link Segment} which determines error marker location
-	 */
-	public final static Segment getAttributeSegment(IDOMNode errorNode, int regionType) {
-		return HTMLAttributeValidator.getErrorSegment(errorNode, regionType);
 	}
 }

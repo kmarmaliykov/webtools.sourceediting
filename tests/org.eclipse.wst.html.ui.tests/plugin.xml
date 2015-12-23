@@ -12,6 +12,7 @@
 		</view>
 	</extension>
 	<extension point="org.eclipse.wst.html.core.customTagValidator">
-		<validator class="org.eclipse.wst.html.ui.tests.validation.CustomExtendedValidator"></validator>
+		<validator tag-class="org.eclipse.wst.html.ui.tests.validation.CustomExtendedValidator"
+				attr-class="org.eclipse.wst.html.ui.tests.validation.CustomExtendedAttributeValidator"></validator>
 	</extension>
 </plugin>

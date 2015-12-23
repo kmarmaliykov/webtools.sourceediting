@@ -32,12 +32,4 @@ public interface IHTMLCustomTagValidator {
 	 * @return <code>null</code> if no error happens or {@link ValidationMessage} with error message and error region
 	 */
 	public ValidationMessage validateTag(IDOMElement target);
-	
-	/**Validates specified attribute of specified tag
-	 * 
-	 * @param target tag to be validated
-	 * @param attrName attribute to be validated
-	 * @return <code>null</code> if no error happens or {@link ValidationMessage} with error message and error region
-	 */
-	public ValidationMessage validateAttribute(IDOMElement target, String attrName);
 }

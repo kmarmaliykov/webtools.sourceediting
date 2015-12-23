@@ -14,7 +14,6 @@ import org.eclipse.wst.html.core.internal.validate.Segment;
 import org.eclipse.wst.html.core.validate.extension.HTMLCustomTagValidator;
 import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 public class CustomExtendedValidator extends HTMLCustomTagValidator{
 
@@ -32,23 +31,9 @@ public class CustomExtendedValidator extends HTMLCustomTagValidator{
 	public ValidationMessage validateTag(IDOMElement target) {
 		String tagName = target.getLocalName();
 		if (tagName.contains("thym")) {
-			Segment segment = getTagSegment(target, TAG_SEG_START_TAG_NAME);
+			Segment segment = getTagSegment(target, SEG_START_TAG_NAME);
 			return new ValidationMessage("Thym is available only with external installation", segment.getOffset(), segment.getLength(), ValidationMessage.ERROR);
 		}
 		return null;
 	}
-
-	public ValidationMessage validateAttribute(IDOMElement target, String attrName) {
-		if ("plugins".equals(attrName)) {
-			try {
-				String attrValue = target.getAttribute(attrName);
-				Integer.parseInt(attrValue);
-			} catch (NumberFormatException e) {
-				Segment segment = getAttributeSegment((IDOMNode)target.getAttributeNode(attrName), ATTR_REGION_NAME);
-				return new ValidationMessage("Attribute should be integer", segment.getOffset(), segment.getLength(), ValidationMessage.ERROR);				
-			}
-		}
-		return null;
-	}
-
 }

@@ -49,13 +49,23 @@
 
    <element name="validator">
       <complexType>
-         <attribute name="class" type="string" use="required">
+         <attribute name="tag-class" type="string" use="required">
             <annotation>
                <documentation>
                   
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.wst.html.core.internal.validate.extension.IHTMLCustomTagValidator:"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="attr-class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.html.core.internal.validate.extension.IHTMLCustomAttributeValidator:"/>
                </appInfo>
             </annotation>
          </attribute>
