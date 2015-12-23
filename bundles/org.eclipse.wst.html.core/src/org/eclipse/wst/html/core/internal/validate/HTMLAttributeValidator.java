@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.validate;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,7 +25,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -33,6 +36,7 @@ import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
+import org.eclipse.wst.html.core.internal.Logger;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeConstants;
 import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.html.core.validate.extension.IHTMLCustomTagValidator;
@@ -84,6 +88,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 	private static final String ATTR_NAME_WAI_ARIA = "aria-"; //$NON-NLS-1$
 	private static final int ATTR_NAME_WAI_ARIA_LENGTH = ATTR_NAME_WAI_ARIA.length();
 
+	private List<IHTMLCustomTagValidator> externalValidators;
 
 	/**
 	 * HTMLAttributeValidator constructor comment.
@@ -148,8 +153,12 @@ public class HTMLAttributeValidator extends PrimeValidator {
 				final String attrName = a.getName().toLowerCase(Locale.US);
 				// Check for user-defined exclusions
 				if (shouldValidateAttributeName(target, attrName)) {
+					if (externalValidators == null) {
+						initValidators();
+					}
+					
 					boolean validated = false;
-					for (IHTMLCustomTagValidator v : CustomHTMLTagValidatorExtensionLoader.getInstance().getValidators()) {
+					for (IHTMLCustomTagValidator v : externalValidators) {
 						if (v.canValidate((IDOMElement) target)) {
 							validated = true;
 							ValidationMessage result = v.validateAttribute((IDOMElement) target, attrName);
@@ -375,6 +384,20 @@ public class HTMLAttributeValidator extends PrimeValidator {
 		}
 	}
 
+	private void initValidators() {
+		externalValidators = new ArrayList<IHTMLCustomTagValidator>();
+		for (IConfigurationElement e : CustomHTMLTagValidatorExtensionLoader.getInstance().getValidators()) {
+			IHTMLCustomTagValidator validator;
+			try {
+				validator = (IHTMLCustomTagValidator) e.createExecutableExtension("class");
+				validator.init();
+				externalValidators.add(validator);			
+			} catch (CoreException e1) {
+				Logger.logException(e1);
+			}
+		}
+	}
+	
 	/**
 	 * True if container has nested regions, meaning container is probably too
 	 * complicated (like JSP regions) to validate with this validator.

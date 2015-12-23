@@ -13,30 +13,22 @@ package org.eclipse.wst.html.core.internal.validate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.html.core.validate.extension.HTMLCustomTagValidator;
-import org.eclipse.wst.sse.core.internal.Logger;
 
 public class CustomHTMLTagValidatorExtensionLoader {
-	private List<HTMLCustomTagValidator> validators;
+	private List<IConfigurationElement> validators;
 	
-	public List<HTMLCustomTagValidator> getValidators() {
+	public List<IConfigurationElement> getValidators() {
 		return validators;
 	}
 	
 	private CustomHTMLTagValidatorExtensionLoader() {
-		validators = new ArrayList<HTMLCustomTagValidator>();
+		validators = new ArrayList<IConfigurationElement>();
 		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.wst.html.core.customTagValidator");
 		for (IConfigurationElement e : configurationElements) {
-			try {
-				HTMLCustomTagValidator validator = (HTMLCustomTagValidator) e.createExecutableExtension("class");
-				validators.add(validator);
-				validator.init();
-			} catch (CoreException e1) {
-				Logger.logException(e1);
-			}
+//				HTMLCustomTagValidator validator = (HTMLCustomTagValidator) e.createExecutableExtension("class");
+			validators.add(e);
 		}
 	}
 
